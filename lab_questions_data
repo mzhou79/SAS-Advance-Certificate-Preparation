@@ -1,0 +1,387 @@
+/*=============================================================
+  All datasets used by Labs 1-20 below. Everything lives in WORK.
+=============================================================*/
+
+/* ---------- Lab 1: Sub-Query ---------- */
+data work.lab1;
+   length name $15 dept $10;
+   input name $ dept $ salary;
+   datalines;
+Alan    D10 4800
+Brenda  D10 6200
+Carlos  D20 5100
+Diane   D20 7300
+Ethan   D20 4500
+Farah   D30 6600
+George  D30 5900
+Hana    D30 5300
+Ivan    D10 4100
+Julia   D20 8100
+;
+run;
+
+data work.lab12;
+   length name $15;
+   input name $;
+   datalines;
+Brenda
+Diane
+George
+Julia
+;
+run;
+
+/* ---------- Lab 2: Label ---------- */
+data work.lab2;
+   length name $15;
+   input did name $;
+   datalines;
+10 Alan
+10 Brenda
+20 Carlos
+20 Diane
+30 Ethan
+30 Farah
+;
+run;
+
+/* ---------- Lab 3: SQL to Macro ---------- */
+data work.lab3;
+   length region $10;
+   input region $ height weight;
+   datalines;
+AMR  175 160
+AMR  168 140
+AMR  182 190
+EMEA 160 130
+EMEA 190 210
+APAC 172 155
+APAC 178 175
+AMR  165 135
+EMEA 185 200
+APAC 170 145
+;
+run;
+
+/* ---------- Lab 4: Inner Join / Full Join Unique ---------- */
+data work.cars;
+   length make $10 type $10;
+   input make $ type $;
+   datalines;
+Honda   Sedan
+Honda   SUV
+Toyota  Sedan
+Toyota  Truck
+Ford    Truck
+Ford    SUV
+Mazda   Sedan
+;
+run;
+
+data work.rebate;
+   length make $10 type $10;
+   input make $ type $ rebate;
+   datalines;
+Honda   Sedan  500
+Toyota  Sedan  750
+Ford    Truck  1000
+Nissan  Sedan  600
+;
+run;
+
+/* ---------- Lab 5: SQL Case When ---------- */
+data work.lab5;
+   length name $15;
+   input name $ height;
+   datalines;
+Alan    165
+Brenda  172
+Carlos  184
+Diane   178
+Ethan   169
+Farah   190
+George  175
+Hana    160
+;
+run;
+
+/* ---------- Lab 6 & 7: Having / In-line view ---------- */
+data work.lab6;
+   input did salary;
+   datalines;
+10 4800
+10 6200
+20 5100
+20 7300
+20 4500
+30 6600
+30 5900
+30 5300
+;
+run;
+
+data work.lab7;
+   input did salary;
+   datalines;
+10 4800
+10 6200
+20 5100
+20 7300
+20 4500
+30 6600
+30 5900
+30 5300
+;
+run;
+
+/* ---------- Lab 8: Debug practice ---------- */
+data work.lab8a;
+   input name $ age;
+   datalines;
+Alan 25
+Brenda 40
+Carlos 55
+Diane 30
+;
+run;
+
+/* ---------- Lab 9: Macro Comments ---------- */
+data work.lab9;
+   length name $15;
+   input id name $;
+   datalines;
+1 Alan
+2 Brenda
+3 Carlos
+;
+run;
+
+/* ---------- Lab 10, 11, 12: no dataset needed - these labs CREATE datasets ---------- */
+
+/* ---------- Lab 13: Array Missing to 0 (all numeric) ---------- */
+data work.lab13;
+   input id x1 x2 x3 x4 x5;
+   datalines;
+1 10 . 30 . 50
+2 .  20 .  40 .
+3 15 25 .  .  55
+4 .  .  .  60 70
+5 5  .  35 45 .
+;
+run;
+
+/* ---------- Lab 14: Array Missing to 0 (var12-var15) ---------- */
+data work.lab14;
+   input id var12 var13 var14 var15;
+   datalines;
+1 5  .  15 .
+2 .  25 .  35
+3 45 .  .  55
+4 .  .  65 .
+;
+run;
+
+/* ---------- Lab 15: Array A B C D E to 1 2 3 4 5 ---------- */
+data work.lab15;
+   length q1-q10 $1;
+   input id q1-q10 $;
+   datalines;
+1 A B C D E A B C D E
+2 E D C B A E D C B A
+3 A A B B C C D D E E
+;
+run;
+
+/* ---------- Lab 16: Array Inch to CM ---------- */
+data work.lab16;
+   input id height1-height3;
+   datalines;
+1 66 68 70
+2 72 70 74
+3 60 62 64
+;
+run;
+
+/* ---------- Lab 17: Function Inch to CM ---------- */
+data work.lab17;
+   input id height;
+   datalines;
+1 66
+2 70
+3 72
+4 64
+;
+run;
+
+/* ---------- Lab 18: Function LBS to KG ---------- */
+data work.lab18;
+   input id weight;
+   datalines;
+1 150
+2 190
+3 210
+4 130
+;
+run;
+
+/* ---------- Lab 19: Function String Input (reverse name) ---------- */
+data work.lab19;
+   length name $30;
+   input id name $ &;
+   datalines;
+1 Alan Smith
+2 Brenda Jones
+3 Carlos Diaz
+4 Diane Chen
+;
+run;
+
+/* ---------- Lab 20: Hash Project ---------- */
+data work.lab20;
+   length country_code $2 country_name $20;
+   input country_code $ country_name $;
+   datalines;
+US UnitedStates
+CA Canada
+MX Mexico
+FR France
+JP Japan
+CN China
+;
+run;
+
+data work.lab21;
+   length name $15 country_code $2;
+   input id name $ country_code $;
+   datalines;
+1 Alan   US
+2 Brenda CA
+3 Carlos ZZ
+4 Diane  FR
+5 Ethan  QQ
+6 Farah  JP
+;
+run;
+
+
+### Questions ###
+2. Questions
+
+SQL
+
+Lab 1 — Sub-Query
+In PROC SQL, create a table that reads all variables from work.lab1, but
+only shows observations where name also exists in work.lab12.
+
+Lab 2 — Label
+Select did and name from work.lab2, labeling them "Department ID" and
+"Employee Name."
+
+Lab 3 — SQL to Macro
+Using work.lab3, store the average height for region='AMR' into a
+macro variable. Then do it again storing both average height and average
+weight into two macro variables in one query.
+
+Lab 4 — Inner Join / Full Join, Unique
+Using SQL, create a table with all unique combinations of make and type
+from work.cars, plus rebate from work.rebate. Show rebate where
+make/type match; show missing if there's no match. Only three columns in
+the output: make, type, rebate.
+
+Lab 5 — SQL Case...When
+In work.lab5, create a new variable using a CASE expression: "Low" if
+height<=170, "Middle" if 170<height<181, "High" if height>=181.
+
+Lab 6 — SQL Having
+In work.lab6, compute average salary by did, keep only groups where
+avg salary > 5000, order by salary descending.
+
+Lab 7 — SQL In-Line View
+Same structure as Lab 6, but using work.lab7: keep only groups where avg
+salary is greater than or equal to the median salary of the whole table
+(use an in-line view/subquery for the median).
+
+Macro
+
+Lab 8 — Debug Practice
+Two macros, each with one bug: one bug lives in a macro parameter, one
+in a macro variable reference. Turn on
+options mprint mlogic symbolgen;, run each, and use the log to find and
+fix the problem.
+
+%macro getolder(dsn, n);
+  proc sql;
+    create table work.older_group as
+    select * from &dsn
+    where age > &nn;
+  quit;
+%mend;
+/* %getolder(work.lab8a, 30) */
+
+%macro checkage(dsn);
+  data work.flagged;
+    set &dsn;
+    if age >= 60 then flag = "Y";
+    else flag = "N";
+  run;
+  %put The dataset used was &dsn and the age cutoff was &age;
+%mend;
+/* %checkage(work.lab8a) */
+
+Lab 9 — Macro Comments
+Write a macro that does PROC PRINT on work.lab9, and demonstrate all
+three ways of writing a comment inside a macro.
+
+Lab 10 — Macro Do Loop, i>10
+Write a macro with a DO loop containing an IF statement inside it: create
+a dataset only when the loop counter exceeds 10.
+
+Lab 11 — Macro Do Loop, start to end
+Write a macro that takes a start and end value and creates one dataset per
+iteration from start to end.
+
+Lab 12 — Macro Do Until
+Write a macro with a global macro variable X, initial value 1.25, that
+loops incrementing by 0.25 and %puts the value each time, stopping once
+X reaches 2.
+
+Array
+
+Lab 13 — Array Missing to 0 (all numeric)
+In work.lab13, use an array to set every missing value across all
+numeric variables to 0.
+
+Lab 14 — Array Missing to 0 (named list)
+In work.lab14, use an array to set missing values in var12-var15 to 0.
+
+Lab 15 — Array A B C D E → 1 2 3 4 5
+In work.lab15, use two parallel arrays to convert q1-q10 (letters A–E)
+into new variables num1-num10 holding 1–5 respectively.
+
+Lab 16 — Array Inch to CM
+In work.lab16, use two parallel arrays to convert height1-height3
+(inches) into new variables newheight1-newheight3 (cm).
+
+Function
+
+Lab 17 — Function Inch to CM
+Write a PROC FCMP function that converts inches to cm. Register it with
+cmplib=, then create newheight in work.lab17 by applying the function
+to height.
+
+Lab 18 — Function LBS to KG
+Write a PROC FCMP function that converts pounds to kg, and apply it to
+weight in work.lab18 to create newweight.
+
+Lab 19 — Function String Input
+Write a PROC FCMP character function that takes a "First Last" name and
+returns "Last First" (reversed order). Apply it to name in work.lab19.
+
+Hash
+
+Lab 20 — Hash Project
+Build a hash table from work.lab20 (key = country_code, data =
+country_name). Read work.lab21 and look up each country_code. Output
+successful matches to one dataset (including the resolved country_name)
+and unmatched rows to another.
+
