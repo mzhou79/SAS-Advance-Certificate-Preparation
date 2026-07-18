@@ -8,5 +8,7 @@ Practice the 20 questions in the lab file (dataset provided) until you can write
 
 The lab file contains generated dataset you will use. Paste them into your SAS On Demand for Academics and run them before you answer the problems.
 
+**Typing the problems on a computer and run them in SAS studio is important!! Don't just remember or handwrite them.**
+
 ### 3. Multiple Choice
 Practice the 63 questions and make sure you completely understand how they works. Some questions are not related with the current exam content so you can delete them. In the real exam, all the multiple choice questions will be very similar to those questions. Pay special attention to the grammar details (although you will still pass even you miss some of the questions). Part III of the exam guide was not included in those questions so you have to practice them by yourself, especially the PRX functions.
