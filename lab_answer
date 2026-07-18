@@ -1,0 +1,241 @@
+/* Lab 1 */
+proc sql;
+create table work.q1 as
+select *
+from work.lab1
+where name in (select name from work.lab12);
+quit;
+
+/* Lab 2 */
+proc sql;
+select did label="Department ID",
+       name label="Employee Name"
+from work.lab2;
+quit;
+
+/* Lab 3 */
+proc sql;
+select avg(height) into :macro_var1
+from work.lab3
+where region="AMR";
+quit;
+%put &macro_var1;
+
+proc sql;
+select avg(height), avg(weight)
+into :macro_var1, :macro_var2
+from work.lab3
+where region="AMR";
+quit;
+%put &macro_var1 &macro_var2;
+
+/* Lab 4 - full join + coalesce, since either side may lack a match */
+proc sql;
+create table work.q4 as
+select distinct
+       coalesce(c.make, r.make) as make,
+       coalesce(c.type, r.type) as type,
+       r.rebate
+from work.cars as c
+full join work.rebate as r
+on c.make = r.make and c.type = r.type;
+quit;
+
+/* Lab 5 */
+proc sql;
+create table work.q5 as
+select *, case
+   when height <= 170 then "Low"
+   when height > 170 and height < 181 then "Middle"
+   when height >= 181 then "High"
+end as HLM
+from work.lab5;
+quit;
+
+/* Lab 6 */
+proc sql;
+create table work.q6 as
+select did, avg(salary) as avgsalary
+from work.lab6
+group by did
+having avgsalary > 5000
+order by avgsalary desc;
+quit;
+
+/* Lab 7 */
+proc sql;
+create table work.q7 as
+select did, avg(salary) as avgsalary
+from work.lab7
+group by did
+having avgsalary >= (select median(salary) from work.lab7);
+quit;
+
+/* Lab 8 - debug practice
+   Bug 1 (getolder): parameter is "n" but code references "&nn" - typo.
+   Fix: where age > &n;
+   Bug 2 (checkage): "&age" is never a macro variable - age only exists as
+   a DATA STEP variable inside the data step, invisible to %put outside it.
+   There's no clean fix without passing the cutoff in as a real macro
+   parameter - the lesson is that a data step variable and a macro
+   variable are never the same thing, no matter how similar the name looks. */
+
+%macro getolder(dsn, n);
+  proc sql;
+    create table work.older_group as
+    select * from &dsn
+    where age > &n;
+  quit;
+%mend;
+%getolder(work.lab8a, 30)
+
+/* Lab 9 */
+%macro print;
+   /* this is a regular comment - works fine inside a macro */
+   proc print data=work.lab9;
+   %* this is a macro comment - only valid where a macro statement
+      could appear;
+   *comment method 3 - a plain SAS comment, valid because it's
+   inside the PROC PRINT step, not in open macro logic;
+   run;
+%mend;
+%print
+
+/* Lab 10 */
+%macro loop(start, end);
+   %do i = &start %to &end;
+      %if &i > 10 %then %do;
+         data work.x&i;
+         x = &i;
+         run;
+      %end;
+   %end;
+%mend;
+%loop(1, 20)
+
+/* Lab 11 */
+%macro loop(start, end);
+   %do i = &start %to &end;
+      data work.data&i;
+      x = &i;
+      run;
+   %end;
+%mend;
+%loop(1, 3)
+
+/* Lab 12 */
+%macro loop;
+   %let x = 1.25;
+   %do %until (&x = 2);
+      %let x = %sysevalf(&x + 0.25);
+      %put &x;
+   %end;
+   %put the final value is &x;
+%mend;
+%loop
+
+/* Lab 13 */
+data work.q13;
+set work.lab13;
+array vars[*] _numeric_;
+do i = 1 to dim(vars);
+   if vars[i] = . then vars[i] = 0;
+end;
+drop i;
+run;
+
+/* Lab 14 */
+data work.q14;
+set work.lab14;
+array vars[4] var12-var15;
+do i = 1 to 4;
+   if vars[i] = . then vars[i] = 0;
+end;
+drop i;
+run;
+
+/* Lab 15 */
+data work.q15;
+set work.lab15;
+array qq[10] q1-q10;
+array nn[10] num1-num10;
+do i = 1 to 10;
+   if qq[i] = "A" then nn[i] = 1;
+   else if qq[i] = "B" then nn[i] = 2;
+   else if qq[i] = "C" then nn[i] = 3;
+   else if qq[i] = "D" then nn[i] = 4;
+   else if qq[i] = "E" then nn[i] = 5;
+end;
+drop i;
+run;
+
+/* Lab 16 */
+data work.q16;
+set work.lab16;
+array inches[3] height1-height3;
+array cms[3] newheight1-newheight3;
+do i = 1 to 3;
+   cms[i] = 2.54 * inches[i];
+end;
+drop i;
+run;
+
+/* Lab 17 */
+proc fcmp outlib=work.funcs.dev;
+function inchtocm(inch);
+   cm = 2.54 * inch;
+   return(cm);
+endsub;
+run;
+options cmplib=work.funcs;
+
+data work.q17;
+set work.lab17;
+newheight = inchtocm(height);
+run;
+
+/* Lab 18 */
+proc fcmp outlib=work.funcs.dev;
+function lbstokg(lbs);
+   kg = 0.4536 * lbs;
+   return(kg);
+endsub;
+run;
+options cmplib=work.funcs;
+
+data work.q18;
+set work.lab18;
+newweight = lbstokg(weight);
+run;
+
+/* Lab 19 */
+proc fcmp outlib=work.funcs.dev;
+function reversename(name $) $;
+   length newname $40;
+   newname = catx(" ", scan(name, 2, " "), scan(name, 1, " "));
+   return(newname);
+endsub;
+run;
+options cmplib=work.funcs;
+
+data work.q19;
+set work.lab19;
+new_name = reversename(name);
+run;
+
+/* Lab 20 */
+data work.matched work.unmatched;
+length country_name $20;
+if _n_ = 1 then do;
+   declare hash h(dataset: "work.lab20");
+   h.definekey("country_code");
+   h.definedata("country_name");
+   h.definedone();
+end;
+set work.lab21;
+call missing(country_name);
+rc = h.find();
+if rc = 0 then output work.matched;
+else output work.unmatched;
+drop rc;
+run;
